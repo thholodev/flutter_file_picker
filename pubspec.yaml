@@ -11,10 +11,10 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
 
-  flutter_plugin_android_lifecycle: ^2.0.9
-  plugin_platform_interface: ^2.1.4
-  ffi: ^2.0.1
-  path: ^1.8.2
+  flutter_plugin_android_lifecycle: ^2.0.17
+  plugin_platform_interface: ^2.1.6
+  ffi: ^2.1.0
+  path: ^1.8.3
   win32: '^5.0.2'
 
 dev_dependencies:
@@ -30,7 +30,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.mr.flutter.plugin.filepicker
+        package: com.flutter.plugin.filepicker
         pluginClass: FilePickerPlugin
       ios:
         pluginClass: FilePickerPlugin

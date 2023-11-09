@@ -1,4 +1,4 @@
-package com.mr.flutter.plugin.filepicker;
+package com.flutter.plugin.filepicker;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -27,7 +27,13 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Random;
+
+import android.media.MediaMetadataRetriever;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import org.json.JSONObject;
 
 public class FileUtils {
 
@@ -135,7 +141,7 @@ public class FileUtils {
         }
     }
 
-    public static FileInfo openFileStream(final Context context, final Uri uri, boolean withData) {
+    public static FileInfo openFileStream(final Context context, final Uri uri, boolean withData, boolean withMetadata) {
 
         Log.i(TAG, "Caching from URI: " + uri.toString());
         FileOutputStream fos = null;
@@ -182,10 +188,18 @@ public class FileUtils {
             loadData(file, fileInfo);
         }
 
+        String metadata = "";
+        if(withMetadata) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                metadata = getInfo(context, uri);
+            }
+        }
+
         fileInfo
                 .withPath(path)
                 .withName(fileName)
                 .withUri(uri)
+                .withMetadata(metadata)
                 .withSize(Long.parseLong(String.valueOf(file.length())));
 
         return fileInfo.build();
@@ -318,6 +332,74 @@ public class FileUtils {
         final String[] split = docId.split(":");
         if ((split.length >= 2) && (split[1] != null)) return split[1];
         else return File.separator;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static String getInfo(Context context, Uri uri) {
+        String author,dateString,mimeType,location,frameRateStr,widthStr,heightStr,durationStr,orientation;
+        MediaMetadataRetriever mediaRetriever = new MediaMetadataRetriever();
+        try {
+            mediaRetriever.setDataSource(context, uri);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        author = getData(MediaMetadataRetriever.METADATA_KEY_AUTHOR, mediaRetriever);
+        dateString = getData(MediaMetadataRetriever.METADATA_KEY_DATE, mediaRetriever);
+        try {
+            SimpleDateFormat readFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss.SSS", Locale.getDefault());
+            Date date = readFormat.parse(dateString);
+            SimpleDateFormat outFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+            dateString = outFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mimeType = getData(MediaMetadataRetriever.METADATA_KEY_MIMETYPE, mediaRetriever);
+        location = getData(MediaMetadataRetriever.METADATA_KEY_LOCATION, mediaRetriever);
+        System.out.print("This is the location result: " + location);
+        frameRateStr = getData(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE, mediaRetriever);
+        durationStr = getData(MediaMetadataRetriever.METADATA_KEY_DURATION, mediaRetriever);
+        widthStr = getData(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH, mediaRetriever);
+        heightStr = getData(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT, mediaRetriever);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            orientation = getData(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION, mediaRetriever);
+        } else {
+            orientation = null;
+        }
+
+        try {
+            mediaRetriever.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("path", uri);
+            json.put("mimetype", mimeType);
+            json.put("author", author);
+            json.put("date", dateString);
+            json.put("width", widthStr);
+            json.put("height", heightStr);
+            json.put("location", location);
+            json.put("framerate", frameRateStr);
+            json.put("duration", durationStr);
+            json.put("orientation", orientation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return json.toString();
+    }
+
+    public static String getData(int key, MediaMetadataRetriever mediaRetriever) {
+        try {
+            return mediaRetriever.extractMetadata(key);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

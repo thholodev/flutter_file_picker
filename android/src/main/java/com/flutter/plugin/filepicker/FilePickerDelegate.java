@@ -1,4 +1,4 @@
-package com.mr.flutter.plugin.filepicker;
+package com.flutter.plugin.filepicker;
 
 import android.Manifest;
 import android.app.Activity;
@@ -94,7 +94,12 @@ public class FilePickerDelegate implements PluginRegistry.ActivityResultListener
                             int currentItem = 0;
                             while (currentItem < count) {
                                 final Uri currentUri = data.getClipData().getItemAt(currentItem).getUri();
-                                final FileInfo file = FileUtils.openFileStream(FilePickerDelegate.this.activity, currentUri, loadDataToMemory);
+                                final FileInfo file;
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                    file = FileUtils.openFileStream(FilePickerDelegate.this.activity, currentUri, loadDataToMemory, true);
+                                } else {
+                                    file = FileUtils.openFileStream(FilePickerDelegate.this.activity, currentUri, loadDataToMemory, false);
+                                }
 
                                 if(file != null) {
                                     files.add(file);
@@ -120,8 +125,12 @@ public class FilePickerDelegate implements PluginRegistry.ActivityResultListener
                                 }
                                 return;
                             }
-
-                            final FileInfo file = FileUtils.openFileStream(FilePickerDelegate.this.activity, uri, loadDataToMemory);
+                            final FileInfo file;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                file = FileUtils.openFileStream(FilePickerDelegate.this.activity, uri, loadDataToMemory, true);
+                            } else {
+                                file = FileUtils.openFileStream(FilePickerDelegate.this.activity, uri, loadDataToMemory,false);
+                            }
 
                             if(file != null) {
                                 files.add(file);
@@ -144,7 +153,12 @@ public class FilePickerDelegate implements PluginRegistry.ActivityResultListener
                                     for (Parcelable fileUri : fileUris) {
                                         if (fileUri instanceof Uri) {
                                             Uri currentUri = (Uri) fileUri;
-                                            final FileInfo file = FileUtils.openFileStream(FilePickerDelegate.this.activity, currentUri, loadDataToMemory);
+                                            final FileInfo file;
+                                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                                file = FileUtils.openFileStream(FilePickerDelegate.this.activity, currentUri, loadDataToMemory, true);
+                                            } else {
+                                                file = FileUtils.openFileStream(FilePickerDelegate.this.activity, currentUri, loadDataToMemory,false);
+                                            }
 
                                             if (file != null) {
                                                 files.add(file);

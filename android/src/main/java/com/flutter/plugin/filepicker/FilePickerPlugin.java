@@ -1,4 +1,4 @@
-package com.mr.flutter.plugin.filepicker;
+package com.flutter.plugin.filepicker;
 
 import android.app.Activity;
 import android.app.Application;

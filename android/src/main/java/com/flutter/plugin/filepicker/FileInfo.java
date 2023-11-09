@@ -1,4 +1,4 @@
-package com.mr.flutter.plugin.filepicker;
+package com.flutter.plugin.filepicker;
 
 import android.net.Uri;
 
@@ -8,22 +8,26 @@ public class FileInfo {
 
     final String path;
     final String name;
+    final String metadata;
     final Uri uri;
     final long size;
     final byte[] bytes;
 
-    public FileInfo(String path, String name, Uri uri, long size, byte[] bytes) {
+    public FileInfo(String path, String name,  Uri uri, String metadata, long size, byte[] bytes) {
         this.path = path;
         this.name = name;
         this.size = size;
         this.bytes = bytes;
         this.uri = uri;
+        this.metadata = metadata;
     }
 
     public static class Builder {
 
         private String path;
         private String name;
+
+        private String metadata;
         private Uri uri;
         private long size;
         private byte[] bytes;
@@ -53,8 +57,13 @@ public class FileInfo {
             return this;
         }
 
+        public Builder withMetadata(String metadata){
+            this.metadata = metadata;
+            return this;
+        }
+
         public FileInfo build() {
-            return new FileInfo(this.path, this.name, this.uri, this.size, this.bytes);
+            return new FileInfo(this.path, this.name, this.uri, this.metadata, this.size, this.bytes);
         }
     }
 
@@ -63,6 +72,7 @@ public class FileInfo {
         final HashMap<String, Object> data = new HashMap<>();
         data.put("path", path);
         data.put("name", name);
+        data.put("metadata", metadata);
         data.put("size", size);
         data.put("bytes", bytes);
         data.put("identifier", uri.toString());

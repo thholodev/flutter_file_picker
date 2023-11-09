@@ -12,6 +12,7 @@ class PlatformFile {
     this.bytes,
     this.readStream,
     this.identifier,
+    this.metadata,
   }) : _path = path;
 
   factory PlatformFile.fromMap(Map data, {Stream<List<int>>? readStream}) {
@@ -21,6 +22,7 @@ class PlatformFile {
       bytes: data['bytes'],
       size: data['size'],
       identifier: data['identifier'],
+      metadata: data['metadata'],
       readStream: readStream,
     );
   }
@@ -48,6 +50,9 @@ class PlatformFile {
 
   /// File name including its extension.
   final String name;
+
+  /// File metadata.
+  final String? metadata;
 
   /// Byte data for this file. Particularly useful if you want to manipulate its data
   /// or easily upload to somewhere else.
@@ -84,6 +89,7 @@ class PlatformFile {
         other.bytes == bytes &&
         other.readStream == readStream &&
         other.identifier == identifier &&
+        other.metadata == metadata &&
         other.size == size;
   }
 
@@ -96,11 +102,12 @@ class PlatformFile {
             bytes.hashCode ^
             readStream.hashCode ^
             identifier.hashCode ^
+            metadata.hashCode ^
             size.hashCode;
   }
 
   @override
   String toString() {
-    return 'PlatformFile(${kIsWeb ? '' : 'path $path'}, name: $name, bytes: $bytes, readStream: $readStream, size: $size)';
+    return 'PlatformFile(${kIsWeb ? '' : 'path $path'}, name: $name, metadata: $metadata, bytes: $bytes, readStream: $readStream, size: $size)';
   }
 }
