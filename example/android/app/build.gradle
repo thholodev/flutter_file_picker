@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId "com.flutter.plugin.filepicker.example"
-        minSdkVersion 16
+        minSdkVersion 31
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"

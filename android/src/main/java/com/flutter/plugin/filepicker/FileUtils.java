@@ -339,7 +339,7 @@ public class FileUtils {
         String author,dateString,mimeType,location,frameRateStr,widthStr,heightStr,durationStr,orientation;
         MediaMetadataRetriever mediaRetriever = new MediaMetadataRetriever();
         try {
-            mediaRetriever.setDataSource(context, uri);
+            mediaRetriever.setDataSource(context, android.provider.MediaStore.getMediaUri(context, uri));
         } catch (Exception e) {
             e.printStackTrace();
         }

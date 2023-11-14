@@ -1,6 +1,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.flutter.plugin.filepicker">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name=
+        "android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name=
+        "android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name=
+        "android.permission.INTERNET"/>
+
+    <!-- required from API level 33 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- To read images created by other apps -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- To read audios created by other apps -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" /> <!-- To read vidoes created by other apps -->
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" /> <!-- To read all files until API level 32 -->
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" /><!-- To write all files until API level 29. We will MediaStore from API level 30 -->
+
+    <!--    android:maxSdkVersion="28"-->
+    <!--    Media location permission-->
+    <!--    If your app targets Android 10 (API level 29) or higher, in order for your app to retrieve unredacted Exif metadata from photos, you need to declare the ACCESS_MEDIA_LOCATION permission in your app's manifest, then request this permission at runtime.-->
+    <!--    Caution: Because you request the ACCESS_MEDIA_LOCATION permission at runtime, there is no guarantee that your app has access to unredacted Exif metadata from photos. Your app requires explicit user consent in order to gain access to this information.-->
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"  />
     <queries>
      <intent>
         <action android:name="android.intent.action.GET_CONTENT" />

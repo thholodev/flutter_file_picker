@@ -16,6 +16,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
   final _initialDirectoryController = TextEditingController();
   final _fileExtensionController = TextEditingController();
   String? _fileName;
+  String? _metadata;
   String? _saveAsFileName;
   List<PlatformFile>? _paths;
   String? _directoryPath;
@@ -59,6 +60,8 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
       _isLoading = false;
       _fileName =
           _paths != null ? _paths!.map((e) => e.name).toString() : '...';
+      _metadata =
+          _paths != null ? _paths!.map((e) => e.metadata).toString() : '...';
       _userAborted = _paths == null;
     });
   }
@@ -159,6 +162,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
       _isLoading = true;
       _directoryPath = null;
       _fileName = null;
+      _metadata = null;
       _paths = null;
       _saveAsFileName = null;
       _userAborted = false;
@@ -451,6 +455,12 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                                                       .map((e) => e.name)
                                                       .toList()[index]
                                                   : _fileName ?? '...');
+                                          final String metadata = 'metadata: ' +
+                                              (isMultiPath
+                                                  ? _paths!
+                                                  .map((e) => e.metadata ?? '...')
+                                                  .toList()[index]
+                                                  : _metadata ?? '...');
                                           final path = kIsWeb
                                               ? null
                                               : _paths!
@@ -462,7 +472,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                                             title: Text(
                                               name,
                                             ),
-                                            subtitle: Text(path ?? ''),
+                                            subtitle: Text((path ?? '') + "\n" + metadata),
                                           );
                                         },
                                         separatorBuilder:
