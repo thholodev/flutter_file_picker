@@ -339,7 +339,7 @@ public class FileUtils {
         String author,dateString,mimeType,location,frameRateStr,widthStr,heightStr,durationStr,orientation;
         MediaMetadataRetriever mediaRetriever = new MediaMetadataRetriever();
         try {
-            mediaRetriever.setDataSource(context, uri);
+            mediaRetriever.setDataSource(context, android.provider.MediaStore.getMediaUri(context, uri));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -358,7 +358,6 @@ public class FileUtils {
 
         mimeType = getData(MediaMetadataRetriever.METADATA_KEY_MIMETYPE, mediaRetriever);
         location = getData(MediaMetadataRetriever.METADATA_KEY_LOCATION, mediaRetriever);
-        System.out.print("This is the location result: " + location);
         frameRateStr = getData(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE, mediaRetriever);
         durationStr = getData(MediaMetadataRetriever.METADATA_KEY_DURATION, mediaRetriever);
         widthStr = getData(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH, mediaRetriever);
